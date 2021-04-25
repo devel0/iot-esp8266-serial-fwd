@@ -10,7 +10,7 @@ Allow to monitor(read) and interact(write) a TTL serial 3.3V over wifi.
 
 - default speed can be changed and saved
 - send text ( one line ) can be autouppercased
-- multiple wifi routers can be inserted in the [code]() and strongest will connected
+- multiple wifi routers can be inserted in the [code](https://github.com/devel0/iot-esp8266-serial-fwd/blob/42cefa981820aebe436a02f99a68831d79f1686e/src/main.cpp#L148) and strongest will connected
 - if no router available you can connect directly to esp in Access Point mode to its own network ( url http://192.168.4.1 )
 - from desktop web browser mDNS allow to locate at http://espserial.local
 
@@ -37,7 +37,7 @@ software serial on D5 (RX) and D6 (TX) used to avoid conflicting with GPIO3/GPIO
 
 ## configure wifis
 
-create your own `.h` file and set into main.cpp right path then set them at startWiFi() function.
+create your own `.h` file and set into [main.cpp](https://github.com/devel0/iot-esp8266-serial-fwd/blob/42cefa981820aebe436a02f99a68831d79f1686e/src/main.cpp#L19) right path then set them at [startWiFi()](https://github.com/devel0/iot-esp8266-serial-fwd/blob/42cefa981820aebe436a02f99a68831d79f1686e/src/main.cpp#L148) function.
 
 ```c
 #ifndef _MY_WIFI_KEY_H_

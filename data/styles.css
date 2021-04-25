@@ -1,0 +1,19 @@
+body
+{
+    font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+}
+
+.rxData
+{
+    height: 80vh;    
+    font-size: 10pt;
+    overflow-y: scroll;
+    background-color: #202020;
+    color: white;
+}
+
+@media (max-width:500px) {
+
+    .rxData { font-size: 9px; }
+  
+  }

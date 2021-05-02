@@ -301,6 +301,22 @@ void handleConfig()
 }
 
 /**
+ * @brief handle /netnfo to report ip,mac nfo of wifi card
+ */
+void handleNetNfo()
+{
+  String msg;
+  msg += "{\"ip\":\"";
+  msg += WiFi.localIP().toString();
+  msg += "\"";
+  msg += ",\"mac\":\"";
+  msg += WiFi.macAddress();
+  msg += "\"";
+  msg += "}";
+  server.send(200, "application/json", msg);
+}
+
+/**
  * @brief handle /send data POST method that will send to sw serial 
  */
 void handleSend()
@@ -321,6 +337,7 @@ void startServer()
   server.on("/serParam", HTTP_GET, handleSerParam);
   server.on("/config", HTTP_GET, handleConfig);
   server.on("/send", HTTP_POST, handleSend);
+  server.on("/netnfo", HTTP_GET, handleNetNfo);
 
   server.onNotFound([]() {
     if (!handleFileRead(server.uri()))

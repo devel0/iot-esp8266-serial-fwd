@@ -6,6 +6,7 @@ var rxDataDiv = document.getElementById("rxDataDiv");
 var serSpeedTxt = document.getElementById("serSpeed");
 var serDataSendTxt = document.getElementById("serDataSend");
 var autoUppercaseCB = document.getElementById("autoUpperCaseCB");
+var netnfoDiv = document.getElementById("netnfodiv");
 
 // ws on open ( send back some test data )
 connection.onopen = function () {
@@ -103,4 +104,8 @@ async function serDataSendKeyDown(e) {
 // retrieve config at start through /config api (GET) json
 fetch("/config").then(response => response.json()).then(data => {
     serSpeedTxt.value = data.speed;
+});
+
+fetch("/netnfo").then(response => response.json()).then(data => {
+    netnfoDiv.innerHTML = "<b>ip</b>(" + data.ip + ")  <b>mac</b>(" + data.mac + ")";
 });

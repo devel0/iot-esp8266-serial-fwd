@@ -30,14 +30,21 @@ connection.onmessage = function (e) {
             console.log('ws msg len=' + len);
 
             var str = "";
+            let last_was_crlf = false;
 
             for (i = 0; i < len; ++i) {
                 let c = view.getUint8(i);
 
-                if (c == 10 || c == 13)
+                if (!last_was_crlf && (c == 10 || c == 13))
+                {
+                    last_was_crlf = true;
                     str += "<br/>";
+                }
                 else
+                {
+                    last_was_crlf = false;
                     str += String.fromCharCode(c);
+                }
             }
 
             rxDataDiv.innerHTML += str;

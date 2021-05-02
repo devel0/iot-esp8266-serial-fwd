@@ -83,7 +83,7 @@ async function reconnectClick() {
 // send serial data from serDataSendTxt html input box, append to the rxDataDiv in orange and call /send api (POST)
 async function sendDataClick() {
     let s = autoUppercaseCB.checked ? serDataSendTxt.value.toUpperCase() : serDataSendTxt.value;
-    rxDataDiv.innerHTML += '<span style="color:orange">' + escape(s) + "</span><br/>";
+    rxDataDiv.innerHTML += '<span style="color:orange">' + s + "</span><br/>";
 
     const resp = await fetch("/send", {
         method: 'POST',

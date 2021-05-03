@@ -85,6 +85,14 @@ async function sendDataClick() {
     let s = autoUppercaseCB.checked ? serDataSendTxt.value.toUpperCase() : serDataSendTxt.value;
     rxDataDiv.innerHTML += '<span style="color:orange">' + s + "</span><br/>";
 
+    if (!scrollSet) {
+        scrollSet = true;
+        window.setTimeout(function () {
+            rxDataDiv.scrollTop = rxDataDiv.scrollHeight;
+            scrollSet = false;
+        }, 200);
+    }
+
     const resp = await fetch("/send", {
         method: 'POST',
         headers: {

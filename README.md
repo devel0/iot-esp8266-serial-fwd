@@ -2,6 +2,20 @@
 
 Allow to monitor(read) and interact(write) a TTL serial 3.3V over wifi.
 
+<hr/>
+
+<!-- TOC -->
+* [features](#features)
+* [wirings](#wirings)
+* [flash the firmware](#flash-the-firmware)
+* [configure wifis](#configure-wifis)
+* [application example](#application-example)
+* [how this project was built](#how-this-project-was-built)
+* [references](#references)
+<!-- TOCEND -->
+
+<hr/>
+
 ![](doc/desktop.png)
 
 ![](doc/mobile.jpg)
@@ -46,6 +60,25 @@ create your own `.h` file and set into [main.cpp](https://github.com/devel0/iot-
 #define WIFI_KEY "mysecretkey"
 #endif
 ```
+
+## application example
+
+![](doc/example01b.jpg)
+
+![](doc/example01a.jpg)
+
+This box allow you to interact with serial of devices either 3v3 or 5v due to the level converter inside the box.
+
+In the photo above an adrduino serial can be used in parallel either with usb or through wifi connecting to http://espserial.local after device power on.
+
+Esp8266 powered through G, VIN pins by a 9V rechargable LiOn battery.
+External red wire ( VREF ) is to be connected to 5V of arduino so that level converter bss138 can recognize the signal and convert to the 3v3 of esp8266.
+
+Notes about wiring lvl converter:
+- GND, LV, L1, L2 connects to esp8266 GND, 3V3, D5, D6
+- GND, HV, H1, H2 are black, red (VREF), green (RX), blue (TX) external wires.
+- green wire ( rx of esp8266 ) is connected to arduino TX.
+- blue wire ( tx of esp8266 ) is connected to arduino RX.
 
 ## how this project was built
 

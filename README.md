@@ -103,9 +103,9 @@ val=969
 or in continuous mode from websocket ( port 82 ) and using ctrl+c to stop. ( [websocat](https://github.com/vi/websocat) required to do this from cmdline )
 
 ```sh
-devel0@tuf:~$ websocat ws://espserial.local:82 | while IFS= read -r line; do echo "adc=[$line] V=[$(echo "$line / 1024 * 3.161" | bc -l)]"; done
-adc=[968] V=[2.98813281250000000000]
-adc=[968] V=[2.98813281250000000000]
+devel0@tuf:~$ websocat ws://espserial.local:82 | while IFS= read -r line; do echo "adc=[$line] V=[$(printf "%0.2f" $(echo "$line / 1024 * 3.161" | bc -l))]"; done
+adc=[968] V=[2.99]
+adc=[968] V=[2.99]
 ...
 ```
 
@@ -114,7 +114,7 @@ or to monitor each seconds
 ```sh
 while true; do
         val="$(curl -s http://espserial.local/a0)"
-        echo "$(date +%Y-%m-%d\ %H:%M.%S) adc=[$val] V=[$(echo "$val / 1024 * 3.161" | bc -l)]";
+        echo "$(date +%Y-%m-%d\ %H:%M.%S) adc=[$val] V=[$(printf "%0.2f" $(echo "$val / 1024 * 3.161" | bc -l))]";
         sleep 1
 done
 ```
@@ -122,7 +122,7 @@ done
 results in follow
 
 ```
-2021-07-30 02:42.11 adc=[950] V=[2.93256835937500000000]
+2021-07-30 02:42.11 adc=[950] V=[2.93]
 ...
 ```
 

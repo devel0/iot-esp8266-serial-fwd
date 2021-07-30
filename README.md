@@ -1,6 +1,6 @@
 # iot-esp8266-serial-fwd
 
-Allow to monitor(read) and interact(write) a TTL serial 3.3V over wifi.
+Allow to monitor(read) and interact(write) a TTL serial 3.3V over wifi or data log analog readings.
 
 <hr/>
 
@@ -10,6 +10,8 @@ Allow to monitor(read) and interact(write) a TTL serial 3.3V over wifi.
 * [flash the firmware](#flash-the-firmware)
 * [configure wifis](#configure-wifis)
 * [application example](#application-example)
+  + [as a serial forwader](#as-a-serial-forwader)
+  + [as a voltage logger](#as-a-voltage-logger)
 * [how this project was built](#how-this-project-was-built)
 * [references](#references)
 <!-- TOCEND -->
@@ -63,6 +65,8 @@ create your own `.h` file and set into [main.cpp](https://github.com/devel0/iot-
 
 ## application example
 
+### as a serial forwader
+
 ![](doc/example01b.jpg)
 
 ![](doc/example01a.jpg)
@@ -79,6 +83,31 @@ Notes about wiring lvl converter:
 - GND, HV, H1, H2 are black, red (VREF), green (RX), blue (TX) external wires.
 - green wire ( rx of esp8266 ) is connected to arduino TX.
 - blue wire ( tx of esp8266 ) is connected to arduino RX.
+
+### as a voltage logger
+
+![](doc/example01c.jpg)
+
+adc retrieves 0-1023 when voltages vary from 0V to VCC ( check red wire voltage, mine is actually 3.161V ) . Natively can monitor 0-3V but can easily extended using a [voltage divider](https://en.wikipedia.org/wiki/Voltage_divider) to monitor up to 25V for example using `[Vin]---[R1=56k]---[yellow]---[R2=7.5k]---[GND]` where Vout (yellow) = 7.5k / (56k+7.5k) * Vin = 0.12 * Vin
+
+- connect black to the same gnd to monitor
+- connect yellow to the point of voltage to monitor
+
+adc value can be read one shot using GET
+
+```sh
+devel0@tuf:~$ echo "val=$(curl -s espserial.local/a0)"
+val=969
+```
+
+or in continuous mode from websocket ( port 82 ) and using ctrl+c to stop. ( [websocat](https://github.com/vi/websocat) required to do this from cmdline )
+
+```sh
+devel0@tuf:~$ websocat ws://espserial.local:82 | while IFS= read -r line; do echo "adc=[$line] V=[$(echo "$line / 1024 * 3.161" | bc -l)]"; done
+adc=[968] V=[2.98813281250000000000]
+adc=[968] V=[2.98813281250000000000]
+...
+```
 
 ## how this project was built
 

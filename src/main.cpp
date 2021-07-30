@@ -34,6 +34,11 @@ ESP8266WebServer server(80);
 WebSocketsServer webSocket(81);
 
 /**
+ * @brief web socket to allow read analog data A0
+ */
+WebSocketsServer webSocket2(82);
+
+/**
  * @brief software serial to avoid use the system GPIO1/GPIO3 busy when uploading to esp
  */
 SoftwareSerial swSer1;
@@ -58,6 +63,11 @@ const char *MDNS_NAME = "espserial";
  * @brief current ws client number ( only 1 client will managed in this simple app ) 
  */
 int wsClientId = -1;
+
+/**
+ * @brief current ws client number ( only 1 client will managed in this simple app ) 
+ */
+int wsClientId2 = -1;
 
 /**
  * @brief register wifi ssid,key and enable AP, wait for connection from either wifi or directly to AP then print IP assigned if connected to wifi router
@@ -119,6 +129,7 @@ uint32_t m_ser_rx = millis();
 void loop(void)
 {
   webSocket.loop();
+  webSocket2.loop();
   server.handleClient();
   MDNS.update();
 
@@ -141,12 +152,21 @@ void loop(void)
       serbufLen = 0;
     }
   }
+
+  if (wsClientId2 != -1)
+  {
+    auto aval = analogRead(A0);
+
+    auto str = String(aval);
+
+    webSocket2.sendTXT(wsClientId2, str);
+  }
 }
 
 void startWiFi()
 {
   wifiMulti.addAP(WIFI_SSID, WIFI_KEY);
-  //wifiMulti.addAP(more_ssid, more_key);
+  wifiMulti.addAP(WIFI_SSID2, WIFI_KEY2);
 
   WiFi.softAP(softap_ssid, softap_pwd);
 
@@ -316,6 +336,15 @@ void handleNetNfo()
   server.send(200, "application/json", msg);
 }
 
+void handleA0Nfo()
+{
+  auto aval = analogRead(A0);
+
+  auto str = String(aval);
+
+  server.send(200, "text/plain", str);
+}
+
 /**
  * @brief handle /send data POST method that will send to sw serial 
  */
@@ -338,11 +367,13 @@ void startServer()
   server.on("/config", HTTP_GET, handleConfig);
   server.on("/send", HTTP_POST, handleSend);
   server.on("/netnfo", HTTP_GET, handleNetNfo);
+  server.on("/a0", HTTP_GET, handleA0Nfo);
 
-  server.onNotFound([]() {
-    if (!handleFileRead(server.uri()))
-      server.send(404, "text/plain", "404: Not Found");
-  });
+  server.onNotFound([]()
+                    { 
+                      if (!handleFileRead(server.uri()))
+                        server.send(404, "text/plain", "404: Not Found");
+                    });
 }
 
 /**
@@ -372,9 +403,36 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t lenght)
   }
 }
 
+/**
+ * @brief handle websocket events ( actually do nothing apart settings wsClientId on conn/disconn ) 
+ */
+void webSocketEvent2(uint8_t num, WStype_t type, uint8_t *payload, size_t lenght)
+{
+  switch (type)
+  {
+
+  case WStype_DISCONNECTED:
+    Serial.printf("[%u] (2) Disconnected!\n", num);
+    wsClientId2 = -1;
+    break;
+
+  case WStype_CONNECTED:
+  {
+    auto ip = webSocket2.remoteIP(num);
+    wsClientId2 = num;
+    Serial.printf("[%u] (2) connect from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+  }
+  break;
+  }
+}
+
 void startWebSocket()
 {
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
+
+  webSocket2.begin();
+  webSocket2.onEvent(webSocketEvent2);
+
   Serial.println("ws started");
 }

@@ -109,6 +109,23 @@ adc=[968] V=[2.98813281250000000000]
 ...
 ```
 
+or to monitor each seconds
+
+```sh
+while true; do
+        val="$(curl -s http://espserial.local/a0)"
+        echo "$(date +%Y-%m-%d\ %H:%M.%S) adc=[$val] V=[$(echo "$val / 1024 * 3.161" | bc -l)]";
+        sleep 1
+done
+```
+
+results in follow
+
+```
+2021-07-30 02:42.11 adc=[950] V=[2.93256835937500000000]
+...
+```
+
 ## how this project was built
 
 - install arduino

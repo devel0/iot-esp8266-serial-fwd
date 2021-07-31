@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# my defaults for voltage-logger
+
+# args : ADC
+
+echo "default eval" >> ~/tmp/log
+
+if [ "$1" == "" ]; then
+    echo "args: ADC"
+    exit 0
+fi
+
+VREF_BAT=3.0
+VREF_SUPPLY=3.215
+
+R1=55950
+R2=7401
+VREF=$VREF_SUPPLY
+ADC=$1
+
+voltage-logger-eval $R1 $R2 $VREF $ADC

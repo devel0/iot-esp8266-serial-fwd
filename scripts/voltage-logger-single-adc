@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# retrieve analog value from espserial forwarder
+
+curl -s http://espserial.local/a0

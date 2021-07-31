@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# evaluate voltage from adc from given optional voltage divider R1, R2 and VREF
+
+# args : R1 R2 VREF ADC
+
+if [ "$4" == "" ]; then
+    echo "args: R1 R2 VREF ADC"
+    echo ""
+    echo "using voltage divider R1=56k R2=7.5k"
+    echo "  $0 55950 7401 3.161 512"
+    echo ""
+    echo "without voltage divider"
+    echo "  $0 0 0 3.161 512"
+    exit 0
+fi
+
+R1=$1
+R2=$2
+VREF=$3
+ADC=$4
+
+if [[ "$R1" == "0" || "$R2" == "0" ]]; then
+    f=1
+else
+    f=$(echo "$R2 / ($R1 + $R2)" | bc -l)
+fi
+
+echo "$(echo "$ADC / 1023 * $VREF / $f" | bc -l)"

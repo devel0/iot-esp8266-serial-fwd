@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# retrieve voltage from espserial forwarder applying default scaling
+
+printf "%0.3f" $(voltage-logger-default-eval $(voltage-logger-single-adc))

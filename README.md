@@ -90,6 +90,8 @@ Notes about wiring lvl converter:
 
 adc retrieves 0-1023 when voltages vary from 0V to VCC ( check red wire voltage, mine is actually 3.161V ) . Natively can monitor 0-3V but can easily extended using a [voltage divider](https://en.wikipedia.org/wiki/Voltage_divider) to monitor up to 25V for example using `[Vin]---[R1=56k]---[yellow]---[R2=7.5k]---[GND]` where Vout (yellow) = 7.5k / (56k+7.5k) * Vin = 0.12 * Vin
 
+![](doc/vdiv.png)
+
 - connect black to the same gnd to monitor
 - connect yellow to the point of voltage to monitor
 
@@ -125,6 +127,10 @@ results in follow
 2021-07-30 02:42.11 adc=[950] V=[2.933]
 ...
 ```
+
+*scripts*
+
+put [these scripts](scripts) in path to use `voltage-logger-<util>`
 
 ## how this project was built
 

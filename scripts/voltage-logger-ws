@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# retrieve in continous (faster) voltage from espserial forwarder applying default scaling 
+
+meanSample=1
+
+if [ "$1" != "" ]; then
+    meanSample=$1
+fi
+
+let i=0
+let sum=0
+let v=0
+
+websocat ws://espserial.local:82 | while IFS= read -r line; do
+    v="$(voltage-logger-default-eval $line)"
+    sum="$(echo "$sum+$v" | bc -l)"    
+    ((i=i+1))
+    if (( $i == $meanSample )); then        
+        mean="$(echo "$sum/$i" | bc -l)"
+        printf "%0.3f\n" $mean
+        i=0
+        sum=0
+    fi
+done

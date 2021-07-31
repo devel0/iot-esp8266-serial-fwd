@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# retrieve in continous (each 1sec) voltage from espserial forwarder applying default scaling 
+
+while true; do
+	voltage-logger-single
+	sleep 1
+done

@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# retrieve in continuous voltage from espserial forwarder applying default scaling
+# optionally as argument can specified how much sample to mean
+
+meanSample=1
+
+if [ "$1" != "" ]; then
+    meanSample=$1
+fi
+
+let i=0
+let sum=0
+let v=0
+
+while true; do
+    v="$(voltage-logger-single)"
+    sum="$(echo "$sum+$v" | bc -l)"    
+    ((i=i+1))
+    if (( $i == $meanSample )); then        
+        mean="$(echo "$sum/$i" | bc -l)"
+        printf "%0.3f\n" $mean
+        i=0
+        sum=0
+    fi
+done

@@ -4,8 +4,6 @@
 
 # args : ADC
 
-echo "default eval" >> ~/tmp/log
-
 if [ "$1" == "" ]; then
     echo "args: ADC"
     exit 0

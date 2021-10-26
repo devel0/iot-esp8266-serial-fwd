@@ -29,6 +29,7 @@ Allow to monitor(read) and interact(write) a TTL serial 3.3V over wifi or data l
 - multiple wifi routers can be inserted in the [code](https://github.com/devel0/iot-esp8266-serial-fwd/blob/42cefa981820aebe436a02f99a68831d79f1686e/src/main.cpp#L148) and strongest will connected
 - if no router available you can connect directly to esp in Access Point mode to its own network ( url http://192.168.4.1 )
 - from desktop web browser mDNS allow to locate at http://espserial.local
+- temperature ds18b20 sensor
 
 ## wirings
 
@@ -41,6 +42,9 @@ software serial on D5 (RX) and D6 (TX) used to avoid conflicting with GPIO3/GPIO
 - LV1, LV2 to esp RX, TX
 - HV to external serial level (eg. 5V)
 - HV1, HV2 to external serial TX, RX
+
+temperature sensor ds18b20:
+- data connected to D2 and through a 4.7k resistor to 3v3
 
 ## flash the firmware
 
@@ -131,6 +135,12 @@ results in follow
 *scripts*
 
 put [these scripts](scripts) in path to use `voltage-logger-<util>`
+
+### as temperature logger
+
+```sh
+while true; do echo "$(curl -s http://espserial.local/temp)"; sleep 1 ; done
+```
 
 ## how this project was built
 

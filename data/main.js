@@ -115,5 +115,5 @@ fetch("/config").then(response => response.json()).then(data => {
 });
 
 fetch("/netnfo").then(response => response.json()).then(data => {
-    netnfoDiv.innerHTML = "<b>ip</b>(" + data.ip + ")  <b>mac</b>(" + data.mac + ")";
+    netnfoDiv.innerHTML = "<b>ip</b>(" + data.ip + ")  <b>mac</b>(" + data.mac + ") T:" + data.T;
 });

@@ -7,6 +7,17 @@
 #include <SoftwareSerial.h>
 #include <WebSocketsServer.h>
 
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+#define ONE_WIRE_BUS D2
+
+OneWire oneWire(ONE_WIRE_BUS);
+
+DallasTemperature sensors(&oneWire);
+
+DeviceAddress Thermometer;
+
 /**
  * REPLACE THIS with a simple header file like the follow
  * 
@@ -107,6 +118,9 @@ void startWebSocket();
 void setup()
 {
   Serial.begin(115200);
+
+  sensors.requestTemperaturesByIndex(0);
+  Serial.printf("temp = %f\n", sensors.getTempCByIndex(0));
 
   startWiFi();
   startmDNS();
@@ -331,9 +345,22 @@ void handleNetNfo()
   msg += "\"";
   msg += ",\"mac\":\"";
   msg += WiFi.macAddress();
-  msg += "\"";
-  msg += "}";
+  msg += "\",\"T\":\"";
+  char buf[20];
+  sensors.requestTemperaturesByIndex(0);
+  snprintf(buf, 16, "%f", sensors.getTempCByIndex(0));
+  msg += buf;
+  msg += "\"}";
   server.send(200, "application/json", msg);
+}
+
+void handleTempNfo()
+{
+  char buf[20];
+  sensors.requestTemperaturesByIndex(0);
+  snprintf(buf, 16, "%f", sensors.getTempCByIndex(0));
+
+  server.send(200, "text/plain", buf);
 }
 
 void handleA0Nfo()
@@ -368,9 +395,10 @@ void startServer()
   server.on("/send", HTTP_POST, handleSend);
   server.on("/netnfo", HTTP_GET, handleNetNfo);
   server.on("/a0", HTTP_GET, handleA0Nfo);
+  server.on("/temp", HTTP_GET, handleTempNfo);
 
   server.onNotFound([]()
-                    { 
+                    {
                       if (!handleFileRead(server.uri()))
                         server.send(404, "text/plain", "404: Not Found");
                     });
